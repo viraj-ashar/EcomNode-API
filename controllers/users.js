@@ -1,18 +1,18 @@
 import User from '../models/Users.js';
 import bcrypt from 'bcryptjs';
+import asyncHandler from 'express-async-handler';
+
 /**
  * @desc Register user
  * @route POST /api/v1/users/register
  * @access Private/Admin
  */
 
-export const registerUser = async (req, res) => {
+export const registerUser = asyncHandler(async (req, res) => {
     const { fullname, email, password } = req.body;
     const userExists = await User.findOne({ email })
     if (userExists) {
-        res.json({
-            msg: 'User already registered'
-        })
+        throw new Error('User already registered');
     }
     else {
         const salt = await bcrypt.genSalt(10);
@@ -26,5 +26,25 @@ export const registerUser = async (req, res) => {
             data: user
         })
     }
+});
 
-}
+export const loginUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+    const userFound = await User.findOne({
+        email
+    });
+
+    if (userFound) {
+        if (await bcrypt.compare(password, userFound.password)) {
+            res.json({
+                status: 'success',
+                msg: 'Login success!!',
+                userFound
+            })
+        } else {
+            throw new Error('Incorrect Password')
+        }
+    } else {
+        throw new Error('User Not Found')
+    }
+});
