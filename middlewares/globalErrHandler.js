@@ -10,7 +10,7 @@ export const globalErrHandler = (err, req, res, next) => {
     })
 }
 
-export const notFound = (err, req, res, next) => {
+export const notFound = (req, res, next) => {
     const error = new Error(`Route ${req.originalUrl} not found`);
     next(error);
 }
