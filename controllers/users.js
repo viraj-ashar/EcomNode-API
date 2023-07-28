@@ -65,7 +65,6 @@ export const loginUser = asyncHandler(async (req, res) => {
 export const getUserProfile = asyncHandler(async (req, res) => {
     const token = getTokenFromHeader(req);
     const verify = verifyToken(token);
-    console.log(verify);
     res.json({
         msg: 'Welcome to profile page'
     })
