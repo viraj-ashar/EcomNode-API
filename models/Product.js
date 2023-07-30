@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const ProductSchema = new Schema(
@@ -65,6 +65,23 @@ const ProductSchema = new Schema(
         toJSON: { virtuals: true }
     }
 );
+
+// Adding virtual properties
+ProductSchema.virtual('totalReviews').get(function () {
+    const product = this;
+    return product?.reviews.length;
+})
+ProductSchema.virtual('averageRatings').get(function () {
+    const product = this;
+    if (!product.reviews || !product.reviews.length) {
+        return "Not rated yet";
+    }
+    let totalRating = 0;
+    for (let review of product.reviews)
+        totalRating += review.rating;
+    const averageRatings = Number(totalRating / product?.reviews.length).toFixed(1);
+    return averageRatings;
+})
 
 const Product = mongoose.model('Product', ProductSchema);
 
