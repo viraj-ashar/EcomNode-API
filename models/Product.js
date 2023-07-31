@@ -67,6 +67,10 @@ const ProductSchema = new Schema(
 );
 
 // Adding virtual properties
+ProductSchema.virtual('qtyLeft').get(function() {
+    const product = this;
+    return product.totalQty - product.totalSold;
+})
 ProductSchema.virtual('totalReviews').get(function () {
     const product = this;
     return product?.reviews.length;
