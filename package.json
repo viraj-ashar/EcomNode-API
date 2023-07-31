@@ -87,6 +87,7 @@
     "side-channel": "^1.0.4",
     "simple-update-notifier": "^2.0.0",
     "statuses": "^2.0.1",
+    "stripe": "^12.16.0",
     "supports-color": "^5.5.0",
     "to-regex-range": "^5.0.1",
     "toidentifier": "^1.0.1",
