@@ -4,6 +4,7 @@ import User from "../models/Users.js";
 import Product from "../models/Product.js";
 import Stripe from "stripe";
 import dotenv from 'dotenv';
+import Coupon from "../models/Coupon.js";
 dotenv.config();
 
 const stripe = new Stripe(process.env.STRIPE_KEY);
@@ -15,9 +16,31 @@ const stripe = new Stripe(process.env.STRIPE_KEY);
  * @access Private
  */
 export const createOrder = asyncHandler(async (req, res) => {
+    const { coupon } = req.query;
+    const couponFound = await Coupon.findOne({
+        code: coupon?.toUpperCase()
+    });
+    if (couponFound?.isExpired)
+        throw new Error('Çoupon is expired.');
+    if (coupon && !couponFound)
+        throw new Error('Coupon does not exists');
+
+    var stripeCoupon;
+    if (couponFound) {
+        stripeCoupon = await stripe.coupons.create({
+            percent_off: couponFound.discount,
+            duration: "once",
+            name: couponFound.code
+        });
+        console.log("****************************************************************")
+        console.log(stripeCoupon);
+        console.log("****************************************************************")
+    }
+
+    const discount = couponFound?.discount / 100;
+
     // get payload(customer, orderItems, shippingAddress, totalPrice)
     const { orderItems, shippingAddress, totalPrice } = req.body;
-    // console.log({ orderItems, shippingAddress, totalPrice });
     // find user
     const user = await User.findById(req.userAuthId);
 
@@ -26,7 +49,6 @@ export const createOrder = asyncHandler(async (req, res) => {
     }
 
     // check if order is not empty
-    console.log(orderItems?.length)
     if (!orderItems || orderItems?.length <= 0) {
         throw new Error('No Order items.');
     }
@@ -35,14 +57,14 @@ export const createOrder = asyncHandler(async (req, res) => {
         user: req.userAuthId,
         orderItems,
         shippingAddress,
-        totalPrice
+        totalPrice: couponFound ? totalPrice - totalPrice * discount : totalPrice
     });
-
+    console.log(totalPrice);
+    console.log(order);
     // update productQty & quantitySold
     orderItems?.map(async (order) => {
         // const product = products?.find((product) => String(product._id) === String(order?._id));
         const product = await Product.findById(order._id);
-        console.log(product);
         if (product)
             product.totalSold += order.qty
         await product.save();
@@ -73,6 +95,9 @@ export const createOrder = asyncHandler(async (req, res) => {
             metadata: {
                 orderId: order?._id.toString()
             },
+            discounts: [
+                { coupon: stripeCoupon.id },
+            ],
             mode: 'payment',
             success_url: 'https://localhost:3000/success',
             cancel_url: 'https://localhost:3000/cancel'

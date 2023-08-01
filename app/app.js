@@ -11,6 +11,7 @@ import orderRoutes from '../routes/order.js';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
 import Order from '../models/Orders.js';
+import couponRoutes from '../routes/coupons.js';
 dotenv.config();
 
 dbConnect();
@@ -75,6 +76,7 @@ app.use('/api/v1/brands/', brandRoutes);
 app.use('/api/v1/colors/', colorRoutes);
 app.use('/api/v1/reviews/', reviewRoutes);
 app.use('/api/v1/orders/', orderRoutes);
+app.use('/api/v1/coupons/', couponRoutes);
 
 app.use(notFound);
 app.use(globalErrHandler);
