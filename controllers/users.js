@@ -63,11 +63,13 @@ export const loginUser = asyncHandler(async (req, res) => {
  * @access Private
  */
 export const getUserProfile = asyncHandler(async (req, res) => {
-    const token = getTokenFromHeader(req);
-    const verify = verifyToken(token);
+    const user = await User.findById(req.userAuthId).populate('orders');
     res.json({
-        msg: 'Welcome to profile page'
+        status: 'Success',
+        message: 'Use profile fetched successfully',
+        user
     })
+
 })
 
 /**

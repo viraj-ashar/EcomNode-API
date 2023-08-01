@@ -11,7 +11,7 @@ const stripe = new Stripe(process.env.STRIPE_KEY);
 
 /**
  * @desc Create Orders
- * @route api/v1/orders
+ * @route POST api/v1/orders
  * @access Private
  */
 export const createOrder = asyncHandler(async (req, res) => {
@@ -89,4 +89,54 @@ export const createOrder = asyncHandler(async (req, res) => {
         order,
         user
     })
+});
+
+/**
+ * @desc Get all orders
+ * @route GET api/v1/orders
+ * @access Public
+ */
+export const getAllOrders = asyncHandler(async (req, res) => {
+    const orders = await Order.find();
+    res.json({
+        status: 'Success',
+        message: 'All orders fetched successfully',
+        orders
+    })
+});
+
+/**
+ * @desc Get single orders
+ * @route GET api/v1/orders/:id
+ * @access Public
+ */
+export const getSingleOrder = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    res.json({
+        status: 'Success',
+        message: 'Order fetched successfully',
+        order
+    })
+});
+
+/**
+ * @desc Update order to be delivered
+ * @route PUT api/v1/orders/update/:id/
+ * @access Private/Admin
+ */
+export const updateOrder = asyncHandler(async (req, res) => {
+    const updatedOrder = await Order.findByIdAndUpdate(req.params.id,
+        {
+            status: req.body.status.toLowerCase(),
+        },
+        {
+            new: true
+        }
+    );
+
+    res.json({
+        success: true,
+        message: 'Order Updated',
+        updatedOrder
+    });
 });
