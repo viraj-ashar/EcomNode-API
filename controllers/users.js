@@ -11,7 +11,7 @@ import { verifyToken } from '../utils/verifyToken.js';
  * @access Private/Admin
  */
 export const registerUser = asyncHandler(async (req, res) => {
-    const { fullname, email, password } = req.body;
+    const { fullname, email, password, isAdmin } = req.body;
     const userExists = await User.findOne({ email })
     if (userExists) {
         throw new Error('User already registered');
@@ -20,7 +20,7 @@ export const registerUser = asyncHandler(async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const user = await User.create({
-            fullname, email, password: hashedPassword
+            fullname, email, password: hashedPassword, isAdmin
         })
         res.status(201).json({
             status: 'success',
