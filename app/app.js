@@ -11,6 +11,7 @@ import orderRoutes from '../routes/orders.js';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
 import Order from '../models/Orders.js';
+import path from 'path';
 import couponRoutes from '../routes/coupons.js';
 dotenv.config();
 
@@ -66,7 +67,13 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
 
 app.use(express.json())
 
+// serve static files
+app.use(express.static('public'));
 // routes
+//Home route
+app.get('/', (req, res) => {
+    res.sendFile(path.join('public', 'index.html'));
+})
 app.use('/api/v1/users/', userRoutes)
 app.use('/api/v1/products/', productRoutes);
 app.use('/api/v1/categories/', categoryRoutes);
