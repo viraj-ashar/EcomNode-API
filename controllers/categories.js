@@ -8,7 +8,9 @@ import asyncHandler from 'express-async-handler';
  */
 
 export const createCategory = asyncHandler(async (req, res) => {
-    const { name, image } = req.body;
+    const image = req.file.path;
+    console.log(image);
+    const { name } = req.body;
     const categoryFound = await Category.findOne({ name });
 
     if (categoryFound) {
@@ -18,6 +20,7 @@ export const createCategory = asyncHandler(async (req, res) => {
     const category = await Category.create({
         name: name.toLowerCase(),
         user: req.userAuthId,
+        image
     });
 
     res.json({

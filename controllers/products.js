@@ -1,3 +1,4 @@
+import upload from "../config/fileUpload.js";
 import Brand from "../models/Brand.js";
 import Category from "../models/Category.js";
 import Product from "../models/Product.js";
@@ -9,6 +10,7 @@ import asyncHandler from 'express-async-handler';
  * @access Private/Admin
  */
 export const createProduct = asyncHandler(async (req, res) => {
+    const images = req.files.filter(file => file.fieldname === 'images').map(file => file.path);
     // TODO: keep appropriate condition to check "Product already existed"
     const { name,
         description,
@@ -16,7 +18,6 @@ export const createProduct = asyncHandler(async (req, res) => {
         category,
         sizes,
         colors,
-        images,
         reviews,
         price,
         totalQty,
