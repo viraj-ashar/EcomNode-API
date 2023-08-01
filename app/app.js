@@ -7,7 +7,7 @@ import categoryRoutes from '../routes/categories.js';
 import brandRoutes from '../routes/brands.js';
 import colorRoutes from '../routes/colors.js';
 import reviewRoutes from '../routes/reviews.js';
-import orderRoutes from '../routes/order.js';
+import orderRoutes from '../routes/orders.js';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
 import Order from '../models/Orders.js';
