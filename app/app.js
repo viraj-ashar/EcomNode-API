@@ -33,7 +33,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
 
     try {
         event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-        // console.log(event);
     } catch (err) {
         response.status(400).send(`Webhook Error: ${err.message}`);
         return;
@@ -60,7 +59,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
                 new: true
             }
         );
-        console.log(order);
     } else {
     }
     response.send();

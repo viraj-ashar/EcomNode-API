@@ -32,9 +32,6 @@ export const createOrder = asyncHandler(async (req, res) => {
             duration: "once",
             name: couponFound.code
         });
-        console.log("****************************************************************")
-        console.log(stripeCoupon);
-        console.log("****************************************************************")
     }
 
     const discount = couponFound?.discount / 100;
@@ -59,8 +56,6 @@ export const createOrder = asyncHandler(async (req, res) => {
         shippingAddress,
         totalPrice: couponFound ? totalPrice - totalPrice * discount : totalPrice
     });
-    console.log(totalPrice);
-    console.log(order);
     // update productQty & quantitySold
     orderItems?.map(async (order) => {
         // const product = products?.find((product) => String(product._id) === String(order?._id));

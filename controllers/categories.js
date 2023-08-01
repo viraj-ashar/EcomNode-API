@@ -9,7 +9,6 @@ import asyncHandler from 'express-async-handler';
 
 export const createCategory = asyncHandler(async (req, res) => {
     const image = req.file.path;
-    console.log(image);
     const { name } = req.body;
     const categoryFound = await Category.findOne({ name });
 

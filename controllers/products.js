@@ -26,7 +26,6 @@ export const createProduct = asyncHandler(async (req, res) => {
     // Check if product already exists
     const productExists = await Product.findOne({ name });
     if (productExists) {
-        console.log("Product existing")
         // throw new Error('Product Already Exists');
         res.json({
             status: 'Failure',
@@ -89,7 +88,6 @@ export const createProduct = asyncHandler(async (req, res) => {
  * @access Public
  */
 export const getProducts = asyncHandler(async (req, res) => {
-    console.log(req.query);
     //query
     let productQuery = Product.find();
 
@@ -130,7 +128,6 @@ export const getProducts = asyncHandler(async (req, res) => {
     //filter by price range
     if (req.query.price) {
         const priceRange = req.query.price.split("-").map(val => Number(val));
-        console.log(priceRange)
         //gte: greater or equal
         //lte: less than or equal to
         productQuery = productQuery.find({
